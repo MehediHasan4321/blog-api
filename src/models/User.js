@@ -3,17 +3,16 @@ const { Schema, model } = require("mongoose");
 const UserSchema = new Schema(
   {
     name: {
-      type:String,
-      required:true
+      type: String,
+      required: true,
     },
     email: {
-      type:String,
-      required:true
+      type: String,
+      required: true,
     },
-    password:{
-      type:String,
-      required:true,
-      
+    password: {
+      type: String,
+      required: true,
     },
 
     role: {
@@ -26,7 +25,9 @@ const UserSchema = new Schema(
       enum: ["pending", "approved", "declined", "blocked"],
       default: "pending",
     },
-  },{timestamps:true,id:true});
+  },
+  { timestamps: true, id: true }
+);
 
 const User = model("User", UserSchema);
 
