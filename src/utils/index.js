@@ -1,7 +1,6 @@
-const {generateQueryString} = require('./generateQueryString')
-const {getPegination} = require('./getPagination')
-
+const query = require('./query')
+const qs = require('./qs')
 module.exports = {
-    generateQueryString,
-    getPegination
+   qs,
+   query
 }

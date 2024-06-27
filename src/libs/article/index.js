@@ -1,6 +1,8 @@
 const { Article } = require("../../models");
 const defaults = require('../../config/defaults')
-const findAll =  ({
+
+
+const findAll = async ({
   page = defaults.page,
   limit = defaults.limit,
   sortType = defaults.sortType,
@@ -10,11 +12,14 @@ const findAll =  ({
   const sortStr = `${sortType === "dsc" ? "-" : ""}${sortBy}`;
   const filter = { title: { $regex: search, $options: "i" } };
 
-  return Article.find(filter)
+
+  const article = await Article.find(filter)
     .populate({ path: "author", select: "name" })
     .sort(sortStr)
     .skip(page * limit - limit)
     .limit(limit);
+
+    return article.map(article=>({...article._doc}))
 };
 
 const count = ({ search = "" }) => {

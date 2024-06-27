@@ -1,5 +1,5 @@
 const articleServices = require('../../../../libs/article')
-const {generateQueryString,getPegination} = require('../../../../utils')
+const {query} = require('../../../../utils')
 const defaults = require('../../../../config/defaults')
 
 
@@ -13,40 +13,31 @@ const findAll =async (req,res,next)=>{
 
 
     try {
-        const articles = await articleServices
+        const articles = await  articleServices
         .findAll({page,limit,sortType,sortBy,search})
         
 
         // Results
 
-        const data = articles.map(aritcle=>({
-            ...aritcle._doc,
-            link:`/articles/${aritcle.id}`
-        }))
+        const data = query.getTransformedItems({items:articles,selection:['title','author','status','cover'],path:'/articles'})
 
 
         // Paginations 
 
         const totalItems = await articleServices.count({search})
-        const pagination= getPegination({totalItems,page,limit})
+        const pagination= query.getPegination ({totalItems,page,limit})
 
         
         // Links
-
-        const links = {
-            self:req.url,
-        }
-
-        if(pagination.next){
-            const query = generateQueryString({...req.query,page:page+1})
-            links.next = `${req.path}?${query}`
-        }
-
-        if(pagination.prev){
-            const query= generateQueryString({...req.query, page: page-1})
-
-            links.prev = `${req.path}?${query}`
-        }
+        const links = query.getHATEOASForAll({
+            url:req.url,
+            path:req.path,
+            queryStr:req.query,
+            hasNext:!!pagination.next,
+            hasPrev:!!pagination.prev,
+            page,
+        })
+        
 
         res.status(200).json({data,pagination,links})
         
