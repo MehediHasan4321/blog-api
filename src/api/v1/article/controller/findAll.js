@@ -19,7 +19,7 @@ const findAll =async (req,res,next)=>{
 
         // Results
 
-        const data = query.getTransformedItems({items:articles,selection:['title','author','status','cover'],path:'/articles'})
+        const data = query.getTransformedItems({items:articles,path:'/articles'})
 
 
         // Paginations 

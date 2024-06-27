@@ -260,7 +260,7 @@ paths:
           $ref: "#/components/responses/401"
         "500":
           $ref: "#/components/responses/500"
-  "/aritcles/{id}":
+  "/articles/{id}":
     get:
       description: Fatch a single article
       tags: [Article]
@@ -721,6 +721,5 @@ components:
       required: true
       description: Article ID
       schema:
-        type: integer
-        format: int32
-        example: 1
+        type: string
+        example: '667d2956438bfb5c95e521a9'

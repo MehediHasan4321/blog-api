@@ -1,6 +1,5 @@
 const { Article } = require("../../models");
-const defaults = require('../../config/defaults')
-
+const defaults = require("../../config/defaults");
 
 const findAll = async ({
   page = defaults.page,
@@ -12,14 +11,13 @@ const findAll = async ({
   const sortStr = `${sortType === "dsc" ? "-" : ""}${sortBy}`;
   const filter = { title: { $regex: search, $options: "i" } };
 
-
   const article = await Article.find(filter)
     .populate({ path: "author", select: "name" })
     .sort(sortStr)
     .skip(page * limit - limit)
     .limit(limit);
 
-    return article.map(article=>({...article._doc}))
+  return article.map((article) => ({ ...article._doc }));
 };
 
 const count = ({ search = "" }) => {
@@ -27,6 +25,8 @@ const count = ({ search = "" }) => {
 
   return Article.countDocuments(filter);
 };
+
+// Create an Article
 
 const create = ({ title, body = "", cover = "", status = "draft", author }) => {
   if (!title || !author) {
@@ -46,8 +46,31 @@ const create = ({ title, body = "", cover = "", status = "draft", author }) => {
   return article.save();
 };
 
+const findSingleItems = async ({ id, expend = "" }) => {
+  if (!id) {
+    throw new Error("Id is required");
+  }
+
+  expend = expend.split(",").map((item) => item.trim());
+
+  const article = await Article.findById(id);
+
+  if (expend.includes("author")) {
+    await article.populate({ path: "author", select: "name"});
+  }
+
+  if (expend.includes("comment")) {
+    await article.populate({
+      path: "comments",
+    });
+  }
+
+  return article._doc;
+};
+
 module.exports = {
   findAll,
   create,
   count,
+  findSingleItems,
 };

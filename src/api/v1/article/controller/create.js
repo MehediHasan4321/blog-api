@@ -11,7 +11,18 @@ const create =async (req,res,next)=>{
         author:req.user
     })
 
-    res.status(201).json(article)
+    const response = {
+        code:201,
+        message:'Article Created Successfully',
+        data:{...article._doc},
+        links:{
+            self:`/articles/${article._id}`,
+            author:`/articles/${article._id}/author`,
+            comments:`/articles/${article._id}/comments`
+        }
+    }
+
+    res.status(201).json(response)
 
     try {
         

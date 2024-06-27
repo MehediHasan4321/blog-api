@@ -8,6 +8,7 @@ router.route('/api/v1/articles')
 .post(articleControllers.create)
 
 router.route('/api/v1/articles/:id')
+.get(articleControllers.findSingle)
 .put(()=>{})
 .patch(()=>{})
 .delete(()=>{})
