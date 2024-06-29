@@ -1,5 +1,16 @@
 const { Article } = require("../../models");
 const defaults = require("../../config/defaults");
+const { notFound } = require("../../utils/error");
+
+/**
+ * findAll Items
+ * Count all items
+ * Find a single Items
+ * Create a new item
+ * Create or update on Item
+ * @param {*} param0
+ * @returns  {}
+ */
 
 const findAll = async ({
   page = defaults.page,
@@ -55,8 +66,12 @@ const findSingleItems = async ({ id, expend = "" }) => {
 
   const article = await Article.findById(id);
 
+  if (!article) {
+    throw notFound();
+  }
+
   if (expend.includes("author")) {
-    await article.populate({ path: "author", select: "name"});
+    await article.populate({ path: "author", select: "name" });
   }
 
   if (expend.includes("comment")) {
@@ -68,9 +83,77 @@ const findSingleItems = async ({ id, expend = "" }) => {
   return article._doc;
 };
 
+const updateOrCreate = async (
+  id,
+  { title, body, cover = "", status = "draft", author }
+) => {
+  const article = await Article.findById(id);
+  if (!article) {
+    const article = await create({ title, body, status, cover, author });
+
+    return {
+      article: article._doc,
+      status: 201,
+    };
+  }
+
+  const payload = {
+    title,
+    body,
+    cover,
+    status,
+    author: author.id,
+  };
+
+  article.overwrite(payload);
+
+  await article.save();
+  return {
+    article: article._doc,
+    status: 200,
+  };
+};
+
+const updateProperties = async (id, { title, body, cover, status }) => {
+  const article = await Article.findById(id);
+
+  if (!article) {
+    throw notFound();
+  }
+
+  const payload = { title, body, cover, status };
+
+  Object.keys(payload).forEach((key) => {
+    article[key] = payload[key] ?? article[key];
+  });
+
+  await article.save();
+
+  return article._doc;
+};
+
+
+const remove =async (id)=>{
+  const article = await Article.findById(id);
+
+  if (!article) {
+    throw notFound();
+  }
+
+
+  //TODO: asynchronously delete all associted comment
+
+  return Article.findByIdAndDelete(id)
+
+}
+
+
 module.exports = {
   findAll,
   create,
   count,
   findSingleItems,
+  updateOrCreate,
+  updateProperties,
+  remove
 };

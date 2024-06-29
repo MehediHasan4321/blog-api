@@ -9,9 +9,9 @@ router.route('/api/v1/articles')
 
 router.route('/api/v1/articles/:id')
 .get(articleControllers.findSingle)
-.put(()=>{})
-.patch(()=>{})
-.delete(()=>{})
+.put(articleControllers.updateItem)
+.patch(articleControllers.updateItemPatch)
+.delete(articleControllers.removeItem)
 
 
 
