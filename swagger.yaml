@@ -22,7 +22,7 @@ tags:
     description: User Endpoints (Admin only)
 
 paths:
-  "/auth/signup":
+  "/auth/regeister":
     post:
       description: This api endpoint will create a new account
       tags: [Auth]
@@ -78,7 +78,7 @@ paths:
           $ref: "#/components/responses/400"
         "500":
           $ref: "#/components/responses/500"
-  "/auth/signin":
+  "/auth/login":
     post:
       description: Login To Your Account
       tags: [Auth]
