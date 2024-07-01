@@ -5,9 +5,10 @@ const generateToken = ({
   payload,
   algorithm = "HS256",
   secrect = process.env.ACCESS_TOKEN_SECRECT,
+  expiresIn='1h'
 }) => {
   try {
-    return jwt.sign(payload, secrect, { algorithm });
+    return jwt.sign(payload, secrect, { algorithm },expiresIn);
   } catch (e) {
     console.log('[JWT',e);
     throw serverError();

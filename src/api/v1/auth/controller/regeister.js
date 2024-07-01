@@ -24,7 +24,7 @@ const regeister = async (req, res, next) => {
     code:201,
     message:'Register successfully',
     data:{
-      accessToken
+      access_token:accessToken
     },
     links:{
       self:req.url,

@@ -1,7 +1,7 @@
-const { userExist,createUser } = require("../user");
+const { userExist,createUser,findUserByEmail } = require("../user");
 const { badRequest } = require("../../utils/error");
-const {generateHash} = require('../../utils/hashing')
-
+const {generateHash,hashMatched} = require('../../utils/hashing')
+const {generateToken} = require('../token')
 
 const register = async ({ name, email, password }) => {
   const hasUser =await userExist(email);
@@ -18,6 +18,35 @@ const register = async ({ name, email, password }) => {
 
 };
 
+const login = async({email,password})=>{
+
+  const user = await findUserByEmail(email)
+
+  if(!user){
+    throw badRequest('Invalid Credentials')
+  }
+
+  const matched = await hashMatched(password,user.password)
+
+  if(!matched){
+    throw badRequest('Invalid Credentials')
+  }
+
+  const payload = {
+    _id:user._id,
+    name:user.name,
+    email:user.email,
+    role:user.role
+  }
+
+
+  return generateToken({payload})
+
+
+}
+
+
 module.exports = {
   register,
+  login,
 };
