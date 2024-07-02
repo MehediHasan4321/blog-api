@@ -51,7 +51,7 @@ const create = ({ title, body = "", cover = "", status = "draft", author }) => {
     body,
     cover,
     status,
-    author: author.id,
+    author: author._id,
   });
 
   return article.save();
@@ -132,21 +132,29 @@ const updateProperties = async (id, { title, body, cover, status }) => {
   return article._doc;
 };
 
-
-const remove =async (id)=>{
+const remove = async (id) => {
   const article = await Article.findById(id);
 
   if (!article) {
     throw notFound();
   }
 
-
   //TODO: asynchronously delete all associted comment
 
-  return Article.findByIdAndDelete(id)
+  return Article.findByIdAndDelete(id);
+};
 
-}
+const checkOwnership = async ({ resourceId, userId }) => {
+  const article = await Article.findById(resourceId);
 
+  if (!article) {
+     throw notFound();
+  }
+
+  if (article._doc.author._id.toString() === userId) return true;
+
+  return false;
+};
 
 module.exports = {
   findAll,
@@ -155,5 +163,6 @@ module.exports = {
   findSingleItems,
   updateOrCreate,
   updateProperties,
-  remove
+  remove,
+  checkOwnership,
 };

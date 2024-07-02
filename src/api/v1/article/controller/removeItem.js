@@ -10,7 +10,7 @@ const removeItem= async (req, res, next) => {
 
    
 
-    res.status(204).end()
+    res.status(204).json({mes:'Article Deleted Successfully'})
   } catch (e) {
     next(e);
   }

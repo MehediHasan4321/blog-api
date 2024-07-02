@@ -1,6 +1,7 @@
 const articleServices = require('../../../../libs/article')
 
 const create =async (req,res,next)=>{
+    
     const {title,body,cover,status} = req.body
 
     const article = await  articleServices.create({

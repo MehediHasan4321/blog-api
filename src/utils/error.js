@@ -17,11 +17,25 @@ const serverError = (mgs='Internal Server Error')=>{
     return error
 }
 
+const authenticationError = (mgs='Authentication Failed')=>{
+    const error = new Error(mgs)
+    error.status = 401
+    return error
+}
+
+const authorizationError = (mgs="You don't have permission")=>{
+    const error = new Error(mgs)
+    error.status =403
+
+    return error
+}
 
 module.exports={
     notFound,
     badRequest,
     serverError,
+    authenticationError,
+    authorizationError,
 }
 
 
