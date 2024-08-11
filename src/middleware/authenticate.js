@@ -13,7 +13,7 @@ const authenticate = async(req, _res, next) => {
     const user = await userService.findUserByEmail(decoded.email)
 
     if(!user){
-      next(authenticationError())
+      next(authenticationError('User Dose not exist!'))
     }
 
     if(user.status !== 'approved'){

@@ -27,7 +27,7 @@ const authorizationError = (mgs="You don't have permission")=>{
     const error = new Error(mgs)
     error.status =403
 
-    return error
+    return error 
 }
 
 module.exports={

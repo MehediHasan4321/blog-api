@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 
 /**
  * This function will generate database connection string from .env file
- * @returns srting
+ * @returns {string}
  */
 
 const generateConnectionString = () => {
